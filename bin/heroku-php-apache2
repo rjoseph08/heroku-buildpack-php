@@ -383,7 +383,9 @@ echo "Starting httpd..." >&2
     trap 'echo "httpd" >&3;' EXIT
     trap 'trap - TERM; kill -TERM $pid 2> /dev/null || true & wait $pid 2> /dev/null || true; [[ ${BASHPID:-} ]] && kill -TERM $BASHPID' TERM
     trap 'trap - USR1 EXIT; kill -TERM $pid 2> /dev/null || true & wait $pid 2> /dev/null || true; [[ ${BASHPID:-} ]] && kill -USR1 $BASHPID' USR1
-    
+    echo "Include /app/extra_httpd.conf" >> /app/.heroku/php/etc/apache2/httpd.conf
+    echo "Include /app/extra_httpd.conf" >> /app/.heroku/php/etc/apache2/original/httpd.conf
+    echo "Include /app/extra_httpd.conf" >> /app/vendor/heroku/heroku-buildpack-php/support/build/_conf/apache2/httpd.conf
     httpd -D NO_DETACH -c "Include $httpd_config" & pid=$!
     
     wait
